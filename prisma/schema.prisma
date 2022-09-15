@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id                        Int                         @default(autoincrement()) @id
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime                    @updatedAt
+  status                    Boolean                     @default(true)
+  account                   String                      @unique
+  password                  String
+
+  boards                    Boards[]
+  boardLikes                BoardLikes[]
+  boardComments             BoardComments[]
+  boardCommentReplies       BoardCommentReplies[]
+}
+
+model Boards {
+  id                        Int                         @default(autoincrement()) @id
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime                    @updatedAt
+  title                     String
+  contents                  String
+  userId                    Int
+
+  users                     Users                       @relation(fields:[userId], references: [id])
+  boardLikes                BoardLikes[]
+  boardImages               BoardImages[]
+  boardComments             BoardComments[]
+}
+
+model BoardLikes {
+  id                Int             @default(autoincrement()) @id
+  status            Boolean         @default(true)
+  freeBoardId       Int
+  userId            Int
+
+  users             Users           @relation(fields:[userId], references: [id])
+  boards            Boards          @relation(fields:[freeBoardId], references: [id])
+}
+
+model BoardImages {
+  id                Int             @default(autoincrement()) @id
+  status            Boolean         @default(true)
+  board             Int
+  imageUrl          String
+
+  boards            Boards          @relation(fields:[board], references: [id])
+}
+
+model BoardComments {
+  id                        Int             @default(autoincrement()) @id
+  createdAt                 DateTime        @default(now())
+  updatedAt                 DateTime        @updatedAt
+  status                    Boolean         @default(true)
+  freeBoardId               Int
+  userId                    Int
+  contents                  String
+
+  Boards                    Boards          @relation(fields:[freeBoardId], references: [id])
+  users                     Users           @relation(fields:[userId], references: [id])
+  BoardCommentReplies       BoardCommentReplies[]
+}
+
+model BoardCommentReplies {
+  id                        Int                 @default(autoincrement()) @id
+  createdAt                 DateTime            @default(now())
+  updatedAt                 DateTime            @updatedAt
+  status                    Boolean             @default(true)
+  freeBoardCommentId        Int
+  userId                    Int
+  contents                  String
+
+  users                     Users               @relation(fields:[userId], references: [id])
+  boardComments             BoardComments       @relation(fields:[freeBoardCommentId], references: [id])
+}
+
+
