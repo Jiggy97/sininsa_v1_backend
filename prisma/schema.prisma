@@ -15,7 +15,7 @@ model Users {
   createdAt                 DateTime                    @default(now())
   updatedAt                 DateTime                    @updatedAt
   status                    Boolean                     @default(true)
-  account                   String                      @unique
+  email                     String                      @unique
   password                  String
 
   boards                    Boards[]
