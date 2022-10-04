@@ -11,4 +11,9 @@ export class AuthService {
     const hashedPassword = await Crypto.encrypt(password);
     return this.usersService.createUser(email, hashedPassword);
   }
+
+  async login(password: string, hash: string) {
+    const authaccount = await Crypto.isMatch(password, hash);
+    return authaccount;
+  }
 }

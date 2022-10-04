@@ -5,6 +5,7 @@ import { BoardsCommentsModule } from './boards/boards-comments/boards-comments.m
 import { BoardsCommentsController } from './boards/boards-comments/boards-comments.controller';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from '@app/prisma';
+import { LoginModule } from './login/login.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { PrismaModule } from '@app/prisma';
     BoardsModule,
     BoardsCommentsModule,
     AuthModule,
+    LoginModule,
   ],
   controllers: [BoardsCommentsController],
 })
