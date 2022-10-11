@@ -1,15 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma, Users } from '@prisma/client';
+import { UsersError } from './error';
 import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  createUser(email: string, password: string) {
-    return this.usersRepository.createUser(email, password);
+  create(data: Prisma.UsersUncheckedCreateInput) {
+    return this.usersRepository.create(data);
   }
 
-  findOne(email: string) {
-    return this.usersRepository.findOne(email);
+  async getUserByEmailWithValidate(email: string): Promise<Users> {
+    const user = await this.usersRepository.findByEmail(email);
+
+    if (!user || !user.status) {
+      throw new NotFoundException(UsersError.NOT_FOUND_USER);
+    }
+
+    return user;
   }
 }
