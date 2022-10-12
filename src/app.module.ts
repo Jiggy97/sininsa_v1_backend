@@ -9,9 +9,16 @@ import { TokenModule } from './authentication/token/token.module';
 import { JwtModule } from '@app/jwt';
 import { AccessTokenService } from './authentication/token/access-token.service';
 import { RefreshTokenService } from './authentication/token/refresh-token.service';
+import { ConfigModule } from '@nestjs/config';
+import validationSchema from './environments/env-config.schema';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: [`environments/.${process.env.NODE_ENV}.env`],
+      isGlobal: true,
+      validationSchema,
+    }),
     JwtModule,
     PrismaModule,
     UsersModule,
